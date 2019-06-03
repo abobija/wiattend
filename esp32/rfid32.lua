@@ -1,3 +1,10 @@
+-- Title        : RFID32
+-- Author       : Alija Bobija (https://abobija.com)
+-- Description  : Library for interfacing ESP32 with MFRC522
+-- Dependencies : > spi
+--                > bit
+--                > tmr
+
 local M = {}
 
 local function hex(arg)
@@ -198,7 +205,29 @@ M.calculate_crc = function(data)
     return { M.read(0x22), M.read(0x21) }
 end
 
-M.tag = function()
+M.serial_no_hex = function(sn)
+    local _hex = ''
+
+    for _, b in pairs(sn) do
+        _hex = _hex .. hex(b) .. ' '
+    end
+
+    return _hex
+end
+
+M.tag = function(serial_no)
+    local self = {
+        sn = serial_no
+    }
+
+    self.hex = function()
+        return M.serial_no_hex(self.sn)
+    end
+
+    return self
+end
+
+M.get_tag = function()
     if M.request() == true then
         local err = nil
         local serial_no = nil
@@ -219,38 +248,43 @@ M.tag = function()
         rc522_clear_bitmask(0x08, 0x08)
 
         if #serial_no == 5 then
-            return serial_no
+            return M.tag(serial_no)
         end
     end
 
     return nil
 end
 
-M.tag_hex = function(tag)
-    local _hex = ''
+M.scan = function(opts)
+    local options = extend({
+        interval       = 125,
+        pause_interval = 1000,
+        got_tag        = nil
+    }, opts)
 
-    for _, b in pairs(tag) do
-        _hex = _hex .. hex(b) .. ' '
-    end
+    local _timer = tmr.create()
 
-    return _hex
+    _timer:register(options.interval, tmr.ALARM_SEMI, function()
+        local _tag = M.get_tag()
+
+        
+        if _tag == nil then
+            _timer:interval(options.interval)
+        else
+            _timer:interval(options.pause_interval)
+            
+            options.got_tag(_tag)
+        end
+        
+        _timer:start()
+    end)
+    
+    _timer:start()
+
+    return M
 end
 
-local function rc522_init()
-    M.write(0x01, 0x0F)
-    M.write(0x2A, 0x8D)
-    M.write(0x2B, 0x3E)
-    M.write(0x2D, 30)
-    M.write(0x2C, 0)
-    M.write(0x15, 0x40)
-    M.write(0x11, 0x3D)
-
-    rc522_antenna_on()
-
-    print('RC522 Firmware:', hex(rc522_firmware()))
-end
-
-M.init = function() 
+local function rc522_spi_init() 
     M._master = spi.master(spi.VSPI, {
         sclk = M.config.pin_clk,
         mosi = M.config.pin_mosi,
@@ -258,23 +292,37 @@ M.init = function()
     }, 0)
 
     M._device = M._master:device({
-        cs = M.config.pin_sda,
-        mode = 0,
-        freq = 5000000,
+        cs         = M.config.pin_sda,
+        mode       = 0,
+        freq       = 5000000,
         halfduplex = false
     })
+end
 
-    rc522_init()
+M.init = function() 
+    rc522_spi_init()
+
+    M.write(0x01, 0x0F)
+    M.write(0x2A, 0x8D)
+    M.write(0x2B, 0x3E)
+    M.write(0x2D, 0x1E)
+    M.write(0x2C, 0x00)
+    M.write(0x15, 0x40)
+    M.write(0x11, 0x3D)
+
+    rc522_antenna_on()
+
+    print('RC522 Firmware:', hex(rc522_firmware()))
 
     return M
 end
 
 return function(config)
     M.config = extend({
-        pin_sda  = 22,
-        pin_clk  = 19,
-        pin_miso = 25,
-        pin_mosi = 23
+        pin_sda  = nil,
+        pin_clk  = nil,
+        pin_miso = nil,
+        pin_mosi = nil
     }, config)
     
     return M

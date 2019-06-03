@@ -1,14 +1,12 @@
-local rc522 = require('rfid32')().init()
-
-local timer = tmr.create()
-
-timer:register(250, tmr.ALARM_AUTO, function()
-
-    local tag = rc522.tag()
-
-    if tag ~= nil then
-        print( rc522.tag_hex(tag) )
-    end
-end)
-
-timer:start()
+require('rfid32')({
+        pin_sda  = 22,
+        pin_clk  = 19,
+        pin_miso = 25,
+        pin_mosi = 23
+    })
+    .init()
+    .scan({
+        got_tag = function(tag)
+            print( tag.hex() )
+        end
+    })
