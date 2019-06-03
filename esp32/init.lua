@@ -1,4 +1,4 @@
-local rc522 = require('rc522_32')().init()
+local rc522 = require('rfid32')().init()
 
 local timer = tmr.create()
 
@@ -9,7 +9,6 @@ timer:register(250, tmr.ALARM_AUTO, function()
     if tag ~= nil then
         print( rc522.tag_hex(tag) )
     end
-    
 end)
 
 timer:start()
