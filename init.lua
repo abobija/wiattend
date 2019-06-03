@@ -6,7 +6,7 @@ require('rfid32')({
     })
     .init()
     .scan({
-        got_tag = function(tag)
+        got_tag = function(tag, rfid)
             print( tag.hex() )
         end
     })
