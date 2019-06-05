@@ -23,8 +23,7 @@ local function init_wiattend()
                     timeout = 5000,
                     headers = {
                         ['sguid'] = '2ce81521-c42f-4556-8c28-c69d7e3a3a47',
-                        ['rfid-tag'] = tag_uid,
-                        ['Content-Length'] = '0'
+                        ['rfid-tag'] = tag_uid
                     }
                 },
                 '',
