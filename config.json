@@ -1,0 +1,9 @@
+{
+    "wifi_ssid": "Renault 1.9D",
+    "wifi_pwd": "renault19",
+    "rc522_sda": 22,
+    "rc522_clk": 19,
+    "rc522_miso": 25,
+    "rc522_mosi": 23,
+    "wiattend_srv_url": "http://192.168.0.105:8181"
+}

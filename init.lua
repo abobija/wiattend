@@ -1,13 +1,14 @@
+local config = nil
 local rc522 = nil
 
 local function init_wiattend()
     if rc522 ~= nil then return end
 
     rc522 = require('rfid32')({
-        pin_sda  = 22,
-        pin_clk  = 19,
-        pin_miso = 25,
-        pin_mosi = 23
+        pin_sda  = config.rc522_sda,
+        pin_clk  = config.rc522_clk,
+        pin_miso = config.rc522_miso,
+        pin_mosi = config.rc522_mosi
     })
     .init()
     .scan({
@@ -18,7 +19,7 @@ local function init_wiattend()
             print( tag_uid )
 
             http.post(
-                'http://192.168.0.105:8181/log',
+                config.wiattend_srv_url .. '/log',
                 {
                     timeout = 5000,
                     headers = {
@@ -28,8 +29,8 @@ local function init_wiattend()
                 },
                 '',
                 function(code, data)
-                    if (code < 0) then
-                        print('HTTP request failed')
+                    if code < 0 then
+                        print('HTTP error')
                     else
                         print(code, data)
                     end
@@ -41,15 +42,24 @@ local function init_wiattend()
     })
 end
 
-wifi.mode(wifi.STATION)
+if file.open("config.json") then
+    local decoder = sjson:decoder()
+    
+    decoder:write(file.read())
+    file.close()
+    
+    config = decoder:result()
 
-wifi.sta.config({
-    ssid  = 'Renault 1.9D',
-    pwd   = 'renault19',
-    auto  = false
-})
+    wifi.mode(wifi.STATION)
 
-wifi.sta.on('got_ip', init_wiattend)
-
-wifi.start()
-wifi.sta.connect()
+    wifi.sta.config({
+        ssid  = config.wifi_ssid,
+        pwd   = config.wifi_pwd,
+        auto  = false
+    })
+    
+    wifi.sta.on('got_ip', init_wiattend)
+    
+    wifi.start()
+    wifi.sta.connect()
+end
