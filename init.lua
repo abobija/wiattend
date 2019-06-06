@@ -1,4 +1,5 @@
-local config = nil
+local config_io = require('config_io')
+local config = config_io.load()
 local rc522 = nil
 
 local function init_wiattend()
@@ -42,24 +43,15 @@ local function init_wiattend()
     })
 end
 
-if file.open("config.json") then
-    local decoder = sjson:decoder()
-    
-    decoder:write(file.read())
-    file.close()
-    
-    config = decoder:result()
+wifi.mode(wifi.STATION)
 
-    wifi.mode(wifi.STATION)
+wifi.sta.config({
+    ssid  = config.wifi_ssid,
+    pwd   = config.wifi_pwd,
+    auto  = false
+})
 
-    wifi.sta.config({
-        ssid  = config.wifi_ssid,
-        pwd   = config.wifi_pwd,
-        auto  = false
-    })
-    
-    wifi.sta.on('got_ip', init_wiattend)
-    
-    wifi.start()
-    wifi.sta.connect()
-end
+wifi.sta.on('got_ip', init_wiattend)
+
+wifi.start()
+wifi.sta.connect()
