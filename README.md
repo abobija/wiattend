@@ -8,7 +8,10 @@ Project depends on the following NodeMCU modules:
   - `gpio`
   - `file`
   - `node`
+  - `net`
   - `http`
   - `wifi`
   - `sjson`
+  - `tmr`
+  - `ledc`
   - Modules required by [`rfid32`](https://github.com/abobija/rfid32#dependencies) library
