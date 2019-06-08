@@ -1,6 +1,7 @@
 {
     "wifi_ssid": "Renault 1.9D",
     "wifi_pwd": "renault19",
+    "piezo_gpio": 13,
     "rc522_sda": 22,
     "rc522_clk": 19,
     "rc522_miso": 25,

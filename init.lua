@@ -1,6 +1,7 @@
 local config_io = require('config_io')
 local config = config_io.load()
 local rc522 = nil
+local piezo = require('piezo')({ gpio = config.piezo_gpio })
 
 local function init_wiattend()
     if rc522 ~= nil then return end
@@ -30,10 +31,12 @@ local function init_wiattend()
                 },
                 '',
                 function(code, data)
-                    if code < 0 then
+                    if code ~= 200 then
                         print('HTTP error')
+                        piezo.error()
                     else
                         print(code, data)
+                        piezo.success()
                     end
 
                     rfid.scan_resume()
