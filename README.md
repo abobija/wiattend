@@ -5,7 +5,7 @@ RFID attendance system realized using MFRC522 and ESP32.
 
 When user apply RFID card on the RC522 module, ESP32 will detect presence of card and read the serial number. ESP will send serial number to the NodeJS server ([wiattend-srv](https://github.com/abobija/wiattend-srv)). Server will save new log in MySQL database, then broadcast `JSON` logged tag to the clients ([wiattend-client](https://github.com/abobija/wiattend-client)) via permanent WebSocket channels, and at the end return `JSON` logged tag, as well, back to the ESP32.
 
-## Used technologies
+## Used Technologies
 
   - [NodeJS](https://nodejs.org) ([HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol), [WebSocket](https://en.wikipedia.org/wiki/WebSocket))
   - [MySQL](https://www.mysql.com/) (DBMS)
