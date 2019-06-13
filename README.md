@@ -11,6 +11,12 @@ When user apply RFID card on the RC522 module, ESP32 will detect presence of car
 
 ## Usage
 
+**Tip!** Make sure to include `--recurse-submodules` option in time of cloning
+
+```
+git clone --recurse-submodules "https://github.com/abobija/wiattend.git"
+```
+
 Upload next files to ESP32 (using [ESPLorer](https://www.youtube.com/watch?v=ICRAlUCPpwY&t=23s) or some other tools):
   - `config.json`
   - `config_io.lua`
