@@ -1,0 +1,30 @@
+{
+  "name": "wiattend",
+  "version": "1.0.0",
+  "description": "RFID Attendance System realized using ESP32 and RC522",
+  "main": "app.js",
+  "scripts": {
+    "upload": "node node_modules/nodemcu-tool/bin/nodemcu-tool.js upload --minify config.json config_io.lua rfid32/rfid32.lua piezo.lua init.lua"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abobija/wiattend.git"
+  },
+  "keywords": [
+    "rfid",
+    "rc522",
+    "esp32",
+    "lua",
+    "nodemcu",
+    "attendance-system"
+  ],
+  "author": "Alija Bobija",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/abobija/wiattend/issues"
+  },
+  "homepage": "https://github.com/abobija/wiattend#readme",
+  "dependencies": {
+    "nodemcu-tool": "^3.0.2"
+  }
+}
