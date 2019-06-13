@@ -17,12 +17,17 @@ When user apply RFID card on the RC522 module, ESP32 will detect presence of car
 git clone --recurse-submodules "https://github.com/abobija/wiattend.git"
 ```
 
-Upload next files to ESP32 (using [ESPLorer](https://www.youtube.com/watch?v=ICRAlUCPpwY&t=23s) or some other tools):
-  - `config.json`
-  - `config_io.lua`
-  - `rfid32/rfid32.lua`
-  - `piezo.lua`
-  - `init.lua`
+Install NodeJS dependencies
+
+```
+npm install
+```
+
+Connect ESP32 and run next command to upload files (set correct COM port of your ESP).
+
+```
+npm run upload -- --port=COM7
+```
 
 ## Used Technologies
 
