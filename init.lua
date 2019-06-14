@@ -1,7 +1,7 @@
 local config_io = require('config_io')
 local config = config_io.load()
 local rc522 = nil
-local piezo = require('piezo')({ gpio = config.piezo_gpio })
+local piezo = require('piezo32')({ gpio = config.piezo_gpio })
 
 local function init_wiattend()
     if rc522 ~= nil then return end

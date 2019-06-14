@@ -1,3 +1,6 @@
 [submodule "rfid32"]
 	path = rfid32
 	url = https://github.com/abobija/rfid32.git
+[submodule "piezo32"]
+	path = piezo32
+	url = https://github.com/abobija/piezo32.git

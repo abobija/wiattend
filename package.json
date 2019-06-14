@@ -4,7 +4,7 @@
   "description": "RFID Attendance System realized using ESP32 and RC522",
   "main": "app.js",
   "scripts": {
-    "upload": "node node_modules/nodemcu-tool/bin/nodemcu-tool.js upload --minify config.json config_io.lua rfid32/rfid32.lua piezo.lua init.lua"
+    "upload": "node node_modules/nodemcu-tool/bin/nodemcu-tool.js upload --minify config.json config_io.lua rfid32/rfid32.lua piezo32/piezo32.lua init.lua"
   },
   "repository": {
     "type": "git",
