@@ -6,5 +6,7 @@
     "rc522_clk": 19,
     "rc522_miso": 25,
     "rc522_mosi": 23,
-    "wiattend_srv_url": "http://192.168.0.105:8181"
+    "wiattend_srv_url": "http://192.168.0.105:8181",
+    "green_led_pin": 12,
+    "red_led_pin": 14
 }

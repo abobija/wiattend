@@ -3,6 +3,11 @@ local config = config_io.load()
 local rc522 = nil
 local piezo = require('piezo32')({ gpio = config.piezo_gpio })
 
+gpio.config({ gpio = config.green_led_pin, dir = gpio.IN_OUT })
+gpio.config({ gpio = config.red_led_pin, dir = gpio.IN_OUT })
+gpio.write(config.green_led_pin, 0)
+gpio.write(config.red_led_pin, 0)
+
 local function init_wiattend()
     if rc522 ~= nil then return end
 
@@ -33,10 +38,24 @@ local function init_wiattend()
                 function(code, data)
                     if code ~= 200 then
                         print('HTTP error')
-                        piezo.error()
+                        piezo.error({
+                            on_step = function(step)
+                                gpio.write(
+                                    config.red_led_pin,
+                                    step.playing and 1 or 0
+                                )
+                            end
+                        })
                     else
                         print(code, data)
-                        piezo.success()
+                        piezo.success({
+                            on_step = function(step)
+                                gpio.write(
+                                    config.green_led_pin,
+                                    step.playing and 1 or 0
+                                )
+                            end
+                        })
                     end
 
                     rfid.scan_resume()
