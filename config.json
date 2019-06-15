@@ -8,5 +8,6 @@
     "rc522_mosi": 23,
     "wiattend_srv_url": "http://192.168.0.105:8181",
     "green_led_pin": 12,
-    "red_led_pin": 27
+    "red_led_pin": 27,
+	"blue_led_pin": 2
 }

@@ -5,8 +5,30 @@ local piezo = require('piezo32')({ gpio = config.piezo_gpio })
 
 gpio.config({ gpio = config.green_led_pin, dir = gpio.IN_OUT })
 gpio.config({ gpio = config.red_led_pin, dir = gpio.IN_OUT })
+gpio.config({ gpio = config.blue_led_pin, dir = gpio.IN_OUT })
+
 gpio.write(config.green_led_pin, 0)
 gpio.write(config.red_led_pin, 0)
+gpio.write(config.blue_led_pin, 0)
+
+local blue_led_tmr = tmr.create()
+
+blue_led_tmr:register(100, tmr.ALARM_AUTO, function()
+    if gpio.read(config.blue_led_pin) == 1 then
+        gpio.write(config.blue_led_pin, 0)
+    else
+        gpio.write(config.blue_led_pin, 1)
+    end
+end)
+
+local function disconnected_wifi()
+    blue_led_tmr:start()
+end
+
+local function connected_wifi()
+    blue_led_tmr:stop()
+    gpio.write(config.blue_led_pin, 1)
+end
 
 local function init_wiattend()
     if rc522 ~= nil then return end
@@ -65,6 +87,8 @@ local function init_wiattend()
     })
 end
 
+disconnected_wifi()
+
 wifi.mode(wifi.STATION)
 
 wifi.sta.config({
@@ -73,7 +97,12 @@ wifi.sta.config({
     auto  = false
 })
 
-wifi.sta.on('got_ip', init_wiattend)
+wifi.sta.on('got_ip', function()
+    connected_wifi()
+    init_wiattend()
+end)
+
+wifi.sta.on('disconnected', disconnected_wifi)
 
 wifi.start()
 wifi.sta.connect()
