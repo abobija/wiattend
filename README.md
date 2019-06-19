@@ -47,5 +47,4 @@ Project depends on the following NodeMCU modules:
   - `wifi`
   - `sjson`
   - `tmr`
-  - `ledc`
-  - Modules required by [`rfid32`](https://github.com/abobija/rfid32#dependencies) library
+  - Modules required by [`rfid32`](https://github.com/abobija/rfid32#dependencies), [`piezo32`](https://github.com/abobija/piezo32#dependencies) libraries
